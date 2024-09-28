@@ -169,3 +169,21 @@ exports.checkoutSession = asyncWrapper(async (req, res, next) => {
     data: session,
   });
 });
+exports.webhookCheckout = asyncWrapper(async (req, res, next) => {
+  const sig = req.headers["stripe-signature"];
+
+  let event;
+
+  try {
+    event = stripe.webhooks.constructEvent(
+      req.body,
+      sig,
+      process.env.STRIPE_WEBHOOK_SECRET
+    );
+  } catch (err) {
+    return res.status(400).send(`Webhook Error: ${err.message}`);
+  }
+  if (event.type === "check.session.completed") {
+    console.log("create order heree. ............. ");
+  }
+});
