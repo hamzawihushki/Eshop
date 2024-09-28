@@ -4,7 +4,7 @@ const sharp = require("sharp");
 const ProductModel = require("../models/productModal");
 
 const handlerFactory = require("./handlersFactory");
-const ApiError = require("../utils/ApiError");
+const ApiError = require("../utils/apiError");
 const asyncWrapper = require("../middlewares/asyncWrapper");
 
 const multerStorage = multer.memoryStorage();

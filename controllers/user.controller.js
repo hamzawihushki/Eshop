@@ -7,7 +7,7 @@ const UserModel = require("../models/userModel");
 const handlerFactory = require("./handlersFactory");
 const asyncWrapper = require("../middlewares/asyncWrapper");
 const { uploadSingleImage } = require("../middlewares/uploadImageMiddleware");
-const ApiError = require("../utils/ApiError");
+const ApiError = require("../utils/apiError");
 const createJWT = require("../utils/generateJWT");
 ///////////////===============image uploads===================//////////
 exports.uploadUserImage = uploadSingleImage("profileImg");

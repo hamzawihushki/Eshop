@@ -1,6 +1,6 @@
 const asyncHandler = require("express-async-handler");
 const slugify = require("slugify");
-const AppError = require("../utils/ApiError");
+const AppError = require("../utils/apiError");
 const ApiFeature = require("../utils/apiFeatures");
 
 exports.get = (modal) =>

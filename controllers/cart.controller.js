@@ -1,5 +1,5 @@
 const asyncWrapper = require("../middlewares/asyncWrapper");
-const ApiError = require("../utils/ApiError");
+const ApiError = require("../utils/apiError");
 const Cart = require("../models/cartModel");
 const Product = require("../models/productModal");
 const Coupon = require("../models/couponModel");

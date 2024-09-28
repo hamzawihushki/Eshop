@@ -1,6 +1,6 @@
 const UserModel = require("../models/userModel");
 const asyncWrapper = require("../middlewares/asyncWrapper");
-const ApiError = require("../utils/ApiError");
+const ApiError = require("../utils/apiError");
 
 exports.addAddress = asyncWrapper(async (req, res, next) => {
   const user = await UserModel.findByIdAndUpdate(
