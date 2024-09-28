@@ -171,7 +171,7 @@ exports.checkoutSession = asyncWrapper(async (req, res, next) => {
 });
 exports.webhookCheckout = asyncWrapper(async (req, res, next) => {
   const sig = req.headers["stripe-signature"];
-
+  console.log("Headers:", req.headers);
   let event;
 
   try {
@@ -180,6 +180,7 @@ exports.webhookCheckout = asyncWrapper(async (req, res, next) => {
       sig,
       process.env.STRIPE_WEBHOOK_SECRET
     );
+    console.log(event);
   } catch (err) {
     return res.status(400).send(`Webhook Error: ${err.message}`);
   }

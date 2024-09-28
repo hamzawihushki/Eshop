@@ -34,7 +34,7 @@ router
 router.get(
   "/",
   Auth.protect,
-  Auth.allowedTo("manger", "admin"),
+  Auth.allowedTo("manger", "admin", "user"),
   filterOrderForLoggedUser,
   findAllOrders
 );
