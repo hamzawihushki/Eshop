@@ -4,7 +4,7 @@ const stripe = require("stripe")(
 
 const asyncWrapper = require("../middlewares/asyncWrapper");
 const handlerFactory = require("./handlersFactory");
-const ApiError = require("../utils/ApiError");
+const ApiError = require("../utils/apiError");
 
 const Cart = require("../models/cartModel");
 const Product = require("../models/productModal");
