@@ -7,19 +7,11 @@ const {
   updateOrderToPaid,
   updateOrderToDelivered,
   checkoutSession,
-  webhookCheckout,
 } = require("../controllers/order.controller");
 
 const Auth = require("../controllers/auth.controller");
 
 const router = express.Router();
-
-//checkout webhook
-router.post(
-  "/webhook-checkout",
-  express.raw({ type: "application/json" }),
-  webhookCheckout
-);
 
 router.get(
   "/checkout-session/:cartId",
