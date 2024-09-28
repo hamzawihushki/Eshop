@@ -1,6 +1,4 @@
-const stripe = require("stripe")(
-  "sk_test_51Q2crwGkfrGLZSsAAW2zRCYutGWnBOnEdwrgEn7RGx7TdmEOLfBlXPnvIGxIP4lcyIBwSsy91Fj2ycFNbv2CyamE00pAHUDybN"
-);
+const stripe = require("stripe")(process.env.STRIPE_SECRET);
 
 const asyncWrapper = require("../middlewares/asyncWrapper");
 const handlerFactory = require("./handlersFactory");
@@ -171,7 +169,7 @@ exports.checkoutSession = asyncWrapper(async (req, res, next) => {
 });
 exports.webhookCheckout = asyncWrapper(async (req, res, next) => {
   const sig = req.headers["stripe-signature"];
-  console.log("Headers:", req.headers);
+  console.log("Headers:", sig);
   let event;
 
   try {
