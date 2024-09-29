@@ -9,6 +9,7 @@ exports.get = (modal) =>
     if (req.filterObject) {
       filter = req.filterObject;
     }
+    console.log("Filter");
     const documentsCount = await modal.countDocuments();
     const ApiFeatures = new ApiFeature(modal.find(filter), req.query)
       .filter()

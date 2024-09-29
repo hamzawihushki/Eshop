@@ -182,25 +182,25 @@ const createCardOrder = async (session) => {
   // 3) Create order with default paymentMethodType card
   const order = await Order.create({
     user: user._id,
-    cartItems: cart.cartItems,
+    cartItem: cart.cartItem,
     shippingAddress,
     totalOrderPrice: oderPrice,
     isPaid: true,
     paidAt: Date.now(),
-    paymentMethodType: "card",
+    paymentMethod: "Card",
   });
 
-  // 4) After creating order, decrement product quantity, increment product sold
+  // [4] after create order , increment product sold & decrement product quantity
   if (order) {
-    const bulkOption = cart.cartItems.map((item) => ({
+    const bulkOpt = cart.cartItem.map((item) => ({
       updateOne: {
-        filter: { _id: item.product },
-        update: { $inc: { quantity: -item.quantity, sold: +item.quantity } },
+        filter: { _id: item.product }, // _id of product
+        update: { $inc: { sold: +item.quantity, quantity: -item.quantity } },
       },
     }));
-    await Product.bulkWrite(bulkOption, {});
 
-    // 5) Clear cart depend on cartId
+    await Product.bulkWrite(bulkOpt, {});
+    // [5] clear cart depend on cartId
     await Cart.findByIdAndDelete(cartId);
   }
 };
@@ -214,7 +214,6 @@ exports.webhookCheckout = asyncWrapper(async (req, res, next) => {
       sig,
       process.env.STRIPE_WEBHOOK_SECRET
     );
-    console.log(event);
   } catch (err) {
     return res.status(400).send(`Webhook Error: ${err.message}`);
   }
