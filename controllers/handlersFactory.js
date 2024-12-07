@@ -1,6 +1,6 @@
 const asyncHandler = require("express-async-handler");
 const slugify = require("slugify");
-const AppError = require("../utils/ApiError");
+const AppError = require("../utils/apiError");
 const ApiFeature = require("../utils/apiFeatures");
 
 exports.get = (modal) =>
@@ -9,6 +9,7 @@ exports.get = (modal) =>
     if (req.filterObject) {
       filter = req.filterObject;
     }
+    console.log("Filter");
     const documentsCount = await modal.countDocuments();
     const ApiFeatures = new ApiFeature(modal.find(filter), req.query)
       .filter()

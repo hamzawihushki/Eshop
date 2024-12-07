@@ -4,12 +4,13 @@ const stripe = require("stripe")(
 
 const asyncWrapper = require("../middlewares/asyncWrapper");
 const handlerFactory = require("./handlersFactory");
-const ApiError = require("../utils/ApiError");
+const ApiError = require("../utils/apiError");
 
 const Cart = require("../models/cartModel");
 const Product = require("../models/productModal");
 
 const Order = require("../models/orderModel");
+const userModel = require("../models/userModel");
 
 // @desc Create cash order
 // @route /orders/cartId
@@ -168,4 +169,57 @@ exports.checkoutSession = asyncWrapper(async (req, res, next) => {
     status: "success",
     data: session,
   });
+});
+
+const createCardOrder = async (session) => {
+  const cartId = session.client_reference_id;
+  const shippingAddress = session.metadata;
+  const oderPrice = session.amount_total / 100;
+
+  const cart = await Cart.findById(cartId);
+  const user = await userModel.findOne({ email: session.customer_email });
+
+  // 3) Create order with default paymentMethodType card
+  const order = await Order.create({
+    user: user._id,
+    cartItem: cart.cartItem,
+    shippingAddress,
+    totalOrderPrice: oderPrice,
+    isPaid: true,
+    paidAt: Date.now(),
+    paymentMethod: "Card",
+  });
+
+  // [4] after create order , increment product sold & decrement product quantity
+  if (order) {
+    const bulkOpt = cart.cartItem.map((item) => ({
+      updateOne: {
+        filter: { _id: item.product }, // _id of product
+        update: { $inc: { sold: +item.quantity, quantity: -item.quantity } },
+      },
+    }));
+
+    await Product.bulkWrite(bulkOpt, {});
+    // [5] clear cart depend on cartId
+    await Cart.findByIdAndDelete(cartId);
+  }
+};
+exports.webhookCheckout = asyncWrapper(async (req, res, next) => {
+  const sig = req.headers["stripe-signature"];
+  let event;
+
+  try {
+    event = stripe.webhooks.constructEvent(
+      req.body,
+      sig,
+      process.env.STRIPE_WEBHOOK_SECRET
+    );
+  } catch (err) {
+    return res.status(400).send(`Webhook Error: ${err.message}`);
+  }
+  if (event.type === "checkout.session.completed") {
+    //  Create order
+    createCardOrder(event.data.object);
+  }
+  res.status(200).json({ received: true });
 });

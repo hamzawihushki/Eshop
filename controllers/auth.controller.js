@@ -5,7 +5,7 @@ const bcrypt = require("bcrypt");
 const User = require("../models/userModel");
 const asyncWrapper = require("../middlewares/asyncWrapper");
 
-const ApiError = require("../utils/ApiError");
+const ApiError = require("../utils/apiError");
 const { sendEmail } = require("../utils/sendEmail");
 const createJWT = require("../utils/generateJWT");
 

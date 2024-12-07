@@ -5,10 +5,11 @@ const dotenv = require("dotenv");
 const morgan = require("morgan");
 const compression = require("compression");
 const cors = require("cors");
-const AppError = require("./utils/ApiError");
+const AppError = require("./utils/apiError");
 const dbConnection = require("./config/database");
 const errorMiddleware = require("./middlewares/errorMiddleware");
 const mountRoutes = require("./routes/index");
+const { webhookCheckout } = require("./controllers/order.controller");
 
 dotenv.config({
   path: "config.env",
@@ -22,6 +23,13 @@ app.options("*", cors());
 
 // Compress all responses
 app.use(compression());
+
+//checkout webhook
+app.post(
+  "/webhook-checkout",
+  express.raw({ type: "application/json" }),
+  webhookCheckout
+);
 
 const PORT = process.env.PORT || 8000;
 app.use(express.json());

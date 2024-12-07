@@ -1,6 +1,6 @@
 const UserModel = require("../models/userModel");
 const asyncWrapper = require("../middlewares/asyncWrapper");
-const ApiError = require("../utils/ApiError");
+const ApiError = require("../utils/apiError");
 
 exports.addProductToWishlist = asyncWrapper(async (req, res, next) => {
   if (!req.body.productId) {
